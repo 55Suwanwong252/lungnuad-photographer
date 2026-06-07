@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Inject YouTube iframe
       mediaContainer.innerHTML = `
-        <iframe src="https://www.youtube.com/embed/\${videoId}?autoplay=1&rel=0&modestbranding=1" 
+        <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" 
                 allow="autoplay; encrypted-media; picture-in-picture" 
                 allowfullscreen 
                 class="lightbox-media">
@@ -508,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Inject YouTube iframe
       mediaContainer.innerHTML = `
-        <iframe src="https://www.youtube.com/embed/\${videoId}?autoplay=1&rel=0&modestbranding=1" 
+        <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" 
                 allow="autoplay; encrypted-media; picture-in-picture" 
                 allowfullscreen 
                 class="lightbox-media">
