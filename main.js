@@ -282,4 +282,242 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Run once on load to reveal elements currently in view
   handleScrollAnimation();
+
+  // 7. 3D Netflix Carousel Slider
+  const slides = document.querySelectorAll('.netflix-slide');
+  const prevBtn = document.querySelector('.prev-arrow');
+  const nextBtn = document.querySelector('.next-arrow');
+  const dotsContainer = document.querySelector('.netflix-carousel-dots');
+  
+  if (slides.length > 0) {
+    let currentIndex = 0;
+    const numSlides = slides.length;
+    let autoPlayTimer = null;
+
+    // Create pagination dots
+    slides.forEach((_, idx) => {
+      const dot = document.createElement('div');
+      dot.className = `dot \${idx === 0 ? 'active' : ''}`;
+      dot.addEventListener('click', () => {
+        goToSlide(idx);
+        resetAutoPlay();
+      });
+      dotsContainer.appendChild(dot);
+    });
+    
+    const dots = document.querySelectorAll('.netflix-carousel-dots .dot');
+
+    function updateCarousel() {
+      slides.forEach((slide, idx) => {
+        // Remove old classes
+        slide.className = 'netflix-slide';
+        
+        // Calculate relative offset with wrap-around
+        let offset = idx - currentIndex;
+        
+        // Adjust offset for loop
+        if (offset < -2) offset += numSlides;
+        if (offset > 2) offset -= numSlides;
+
+        // Apply classes based on relative position
+        if (offset === 0) {
+          slide.classList.add('active');
+        } else if (offset === -1) {
+          slide.classList.add('prev');
+        } else if (offset === 1) {
+          slide.classList.add('next');
+        } else if (offset === -2) {
+          slide.classList.add('far-prev');
+        } else if (offset === 2) {
+          slide.classList.add('far-next');
+        } else {
+          // Offscreen
+          slide.style.opacity = '0';
+          slide.style.pointerEvents = 'none';
+        }
+      });
+
+      // Update dots
+      dots.forEach((dot, idx) => {
+        if (idx === currentIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % numSlides;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + numSlides) % numSlides;
+      updateCarousel();
+    }
+
+    function goToSlide(idx) {
+      currentIndex = idx;
+      updateCarousel();
+    }
+
+    // Direct slide clicks
+    slides.forEach((slide, idx) => {
+      slide.addEventListener('click', (e) => {
+        if (idx !== currentIndex) {
+          e.preventDefault();
+          goToSlide(idx);
+          resetAutoPlay();
+        }
+      });
+    });
+
+    // Arrow button listeners
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        prevSlide();
+        resetAutoPlay();
+      });
+      nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nextSlide();
+        resetAutoPlay();
+      });
+    }
+
+    // Swipe / Drag gesture detection
+    let startX = 0;
+    let endX = 0;
+    const carouselContainer = document.querySelector('.netflix-carousel');
+
+    if (carouselContainer) {
+      carouselContainer.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+      }, { passive: true });
+
+      carouselContainer.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleSwipe();
+      }, { passive: true });
+
+      carouselContainer.addEventListener('mousedown', (e) => {
+        startX = e.clientX;
+      });
+
+      carouselContainer.addEventListener('mouseup', (e) => {
+        endX = e.clientX;
+        handleSwipe();
+      });
+
+      function handleSwipe() {
+        const threshold = 50; // minimum distance to count as swipe
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > threshold) {
+          if (diff > 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+          resetAutoPlay();
+        }
+      }
+    }
+
+    // Auto Play
+    function startAutoPlay() {
+      autoPlayTimer = setInterval(nextSlide, 5000);
+    }
+
+    function resetAutoPlay() {
+      clearInterval(autoPlayTimer);
+      startAutoPlay();
+    }
+
+    // Pause autoplay on hover
+    if (carouselContainer) {
+      carouselContainer.addEventListener('mouseenter', () => {
+        clearInterval(autoPlayTimer);
+      });
+      carouselContainer.addEventListener('mouseleave', startAutoPlay);
+    }
+
+    // Initialize
+    updateCarousel();
+    startAutoPlay();
+  }
+
+  // Handle click on WATCH button in the 3D Carousel
+  const watchButtons = document.querySelectorAll('.slide-actions .btn-watch');
+  watchButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent triggering slide click
+      const slide = btn.closest('.netflix-slide');
+      const videoId = slide.getAttribute('data-video-id');
+      const title = slide.querySelector('.slide-title').textContent;
+      const desc = slide.querySelector('.slide-desc').textContent;
+
+      // Set titles
+      lightboxTitle.textContent = title;
+      lightboxDesc.textContent = desc;
+
+      // Inject YouTube iframe
+      mediaContainer.innerHTML = `
+        <iframe src="https://www.youtube.com/embed/\${videoId}?autoplay=1&rel=0&modestbranding=1" 
+                allow="autoplay; encrypted-media; picture-in-picture" 
+                allowfullscreen 
+                class="lightbox-media">
+        </iframe>
+      `;
+
+      // Open lightbox
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  // 8. Continue Watching Slider Horizontal Scroll & click lightbox handlers
+  const track = document.querySelector('.watching-track');
+  const prevWatching = document.querySelector('.prev-watching');
+  const nextWatching = document.querySelector('.next-watching');
+  
+  if (track && prevWatching && nextWatching) {
+    const scrollAmount = 300;
+    
+    prevWatching.addEventListener('click', () => {
+      track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+    
+    nextWatching.addEventListener('click', () => {
+      track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+  }
+
+  const watchingCards = document.querySelectorAll('.watching-card');
+  watchingCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const videoId = card.getAttribute('data-video-id');
+      const title = card.querySelector('.watching-card-title').textContent;
+      const subtitle = card.querySelector('.watching-card-subtitle').textContent;
+
+      // Set titles in lightbox
+      lightboxTitle.textContent = title;
+      lightboxDesc.textContent = subtitle;
+
+      // Inject YouTube iframe
+      mediaContainer.innerHTML = `
+        <iframe src="https://www.youtube.com/embed/\${videoId}?autoplay=1&rel=0&modestbranding=1" 
+                allow="autoplay; encrypted-media; picture-in-picture" 
+                allowfullscreen 
+                class="lightbox-media">
+        </iframe>
+      `;
+
+      // Open lightbox
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
 });
