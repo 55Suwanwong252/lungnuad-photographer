@@ -14,6 +14,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // 1.1 Force Play Background Video & handle autoplay restrictions
+  const heroVideo = document.querySelector('.hero-video');
+  if (heroVideo) {
+    heroVideo.muted = true;
+    heroVideo.playsInline = true;
+    
+    const playVideo = () => {
+      const playPromise = heroVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          console.log("Hero video autoplay started successfully.");
+        }).catch(err => {
+          console.log("Autoplay blocked, waiting for interaction:", err);
+          // Play on first user touch/click
+          const forcePlay = () => {
+            heroVideo.play().catch(e => console.log("Force play failed:", e));
+            document.removeEventListener('click', forcePlay);
+            document.removeEventListener('touchstart', forcePlay);
+          };
+          document.addEventListener('click', forcePlay);
+          document.addEventListener('touchstart', forcePlay);
+        });
+      }
+    };
+    
+    playVideo();
+    window.addEventListener('load', playVideo);
+  }
+
   // 2. Mobile Navigation Toggle
   const mobileToggle = document.querySelector('.mobile-nav-toggle');
   const navMenu = document.getElementById('nav-menu');
@@ -100,14 +129,34 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (videoType === 'wix') {
         const videoUrl = item.getAttribute('data-video-url');
         mediaContainer.innerHTML = `
-          <video src="${videoUrl}" 
-                 autoplay 
+          <div class="video-loading-indicator" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); color:#fff; font-size:16px; font-family:sans-serif; display:flex; flex-direction:column; align-items:center; gap:10px; z-index: 10;">
+            <i class="fa-solid fa-circle-notch fa-spin" style="font-size:32px; color:var(--primary-color);"></i>
+            <span>กำลังโหลดวิดีโอ...</span>
+          </div>
+          <video id="lightbox-video" 
+                 src="${videoUrl}" 
                  controls 
                  playsinline 
                  class="lightbox-media"
-                 style="width:100%; height:100%;">
+                 style="width:100%; height:100%; opacity:0; transition:opacity 0.3s ease; z-index: 11;">
           </video>
         `;
+        
+        const videoEl = document.getElementById('lightbox-video');
+        const loaderEl = mediaContainer.querySelector('.video-loading-indicator');
+        
+        if (videoEl) {
+          videoEl.addEventListener('canplay', () => {
+            if (loaderEl) loaderEl.style.display = 'none';
+            videoEl.style.opacity = '1';
+          });
+          
+          videoEl.play().catch(err => {
+            console.log("Playback prevented, user can click play manually:", err);
+            if (loaderEl) loaderEl.style.display = 'none';
+            videoEl.style.opacity = '1';
+          });
+        }
       }
 
       // Open modal & prevent background scroll
