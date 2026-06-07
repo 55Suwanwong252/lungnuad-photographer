@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  src="${videoUrl}" 
                  controls 
                  playsinline 
+                 crossorigin="anonymous"
                  class="lightbox-media"
                  style="width:100%; height:100%; opacity:0; transition:opacity 0.3s ease; z-index: 11;">
           </video>
