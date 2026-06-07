@@ -1442,52 +1442,48 @@ footer {
   transform: translate(70%, -70%) scale(0.75) rotateY(-35deg);
 }
 
-/* Slide details below slide */
-.netflix-slide .slide-details {
-  position: absolute;
-  top: 105%;
-  left: -20px;
-  right: -20px;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  pointer-events: none;
+/* Active Slide Details (Single Container outside of carousel) */
+.active-slide-details {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.netflix-slide.active .slide-details {
+  text-align: center;
+  margin-top: -60px; /* Pull it up into the carousel empty space to overlap beautifully */
+  margin-bottom: 25px;
+  position: relative;
+  z-index: 12;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px;
   opacity: 1;
   transform: translateY(0);
-  pointer-events: auto;
+  transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.slide-badge {
+.active-slide-details .slide-badge {
   font-size: 11px;
   font-weight: 700;
   color: var(--primary-color);
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
-.slide-title {
+.active-slide-details .slide-title {
   font-family: 'Outfit', 'Prompt', sans-serif;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--text-white);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-.slide-desc {
-  font-size: 12px;
+.active-slide-details .slide-desc {
+  font-size: 13px;
   color: var(--text-gray);
   max-width: 480px;
-  line-height: 1.4;
-  margin-bottom: 12px;
+  line-height: 1.5;
+  margin-bottom: 16px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1495,45 +1491,45 @@ footer {
   overflow: hidden;
 }
 
-.slide-actions {
+.active-slide-details .slide-actions {
   display: flex;
   gap: 12px;
 }
 
-.slide-actions .btn {
-  padding: 8px 20px;
-  font-size: 12px;
+.active-slide-details .btn {
+  padding: 10px 24px;
+  font-size: 13px;
   font-weight: 700;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   transition: var(--transition-fast);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.slide-actions .btn-watch {
+.active-slide-details .btn-watch {
   background-color: var(--primary-color);
   color: var(--text-white);
   border: none;
   box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
 }
 
-.slide-actions .btn-watch:hover {
+.active-slide-details .btn-watch:hover {
   background-color: #e63946;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(230, 57, 70, 0.5);
 }
 
-.slide-actions .btn-add-list {
+.active-slide-details .btn-add-list {
   background-color: rgba(255, 255, 255, 0.1);
   color: var(--text-white);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.slide-actions .btn-add-list:hover {
+.active-slide-details .btn-add-list:hover {
   background-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.5);
@@ -1618,12 +1614,20 @@ footer {
   .netflix-slide.far-next {
     display: none;
   }
-  .slide-title {
-    font-size: 16px;
+  .active-slide-details {
+    margin-top: -30px;
+    margin-bottom: 20px;
   }
-  .slide-desc {
-    font-size: 11px;
-    max-width: 320px;
+  .active-slide-details .slide-title {
+    font-size: 18px;
+  }
+  .active-slide-details .slide-desc {
+    font-size: 12px;
+    max-width: 340px;
+  }
+  .active-slide-details .btn {
+    padding: 8px 18px;
+    font-size: 12px;
   }
   .prev-arrow {
     left: 5px;

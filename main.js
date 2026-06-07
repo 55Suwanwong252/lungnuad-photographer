@@ -345,6 +345,36 @@ document.addEventListener('DOMContentLoaded', () => {
           dot.classList.remove('active');
         }
       });
+
+      // Update active slide details dynamically
+      const activeSlide = slides[currentIndex];
+      const detailsContainer = document.querySelector('.active-slide-details');
+      if (activeSlide && detailsContainer) {
+        const badge = activeSlide.getAttribute('data-badge') || '';
+        const title = activeSlide.getAttribute('data-title') || '';
+        const desc = activeSlide.getAttribute('data-desc') || '';
+        const videoId = activeSlide.getAttribute('data-video-id') || '';
+
+        // Quick fade-out animation for smooth transitions
+        detailsContainer.style.opacity = '0';
+        detailsContainer.style.transform = 'translateY(5px)';
+
+        setTimeout(() => {
+          const badgeEl = detailsContainer.querySelector('.slide-badge');
+          const titleEl = detailsContainer.querySelector('.slide-title');
+          const descEl = detailsContainer.querySelector('.slide-desc');
+          const watchBtn = detailsContainer.querySelector('.btn-watch');
+
+          if (badgeEl) badgeEl.textContent = badge;
+          if (titleEl) titleEl.textContent = title;
+          if (descEl) descEl.textContent = desc;
+          if (watchBtn) watchBtn.setAttribute('data-video-id', videoId);
+
+          // Fade back in
+          detailsContainer.style.opacity = '1';
+          detailsContainer.style.transform = 'translateY(0)';
+        }, 150);
+      }
     }
 
     function nextSlide() {
@@ -449,15 +479,16 @@ document.addEventListener('DOMContentLoaded', () => {
     startAutoPlay();
   }
 
-  // Handle click on WATCH button in the 3D Carousel
-  const watchButtons = document.querySelectorAll('.slide-actions .btn-watch');
-  watchButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent triggering slide click
-      const slide = btn.closest('.netflix-slide');
-      const videoId = slide.getAttribute('data-video-id');
-      const title = slide.querySelector('.slide-title').textContent;
-      const desc = slide.querySelector('.slide-desc').textContent;
+  // Handle click on WATCH button in the active slide details
+  const activeWatchBtn = document.querySelector('.active-slide-details .btn-watch');
+  if (activeWatchBtn) {
+    activeWatchBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const videoId = activeWatchBtn.getAttribute('data-video-id');
+      const titleEl = document.querySelector('.active-slide-details .slide-title');
+      const descEl = document.querySelector('.active-slide-details .slide-desc');
+      const title = titleEl ? titleEl.textContent : '';
+      const desc = descEl ? descEl.textContent : '';
 
       // Set titles
       lightboxTitle.textContent = title;
@@ -476,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
       lightbox.classList.add('open');
       document.body.style.overflow = 'hidden';
     });
-  });
+  }
 
   // 8. Continue Watching Slider Horizontal Scroll & click lightbox handlers
   const track = document.querySelector('.watching-track');
