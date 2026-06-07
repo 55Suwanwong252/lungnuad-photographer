@@ -1,0 +1,14 @@
+node_modules
+dist
+scratch
+*.mov
+*.mp4
+*.jpg
+*.png
+!Pro.png
+!dist/assets/Pro-*.png
+.git
+.vercel
+*.log
+*.txt
+!cc.txt
