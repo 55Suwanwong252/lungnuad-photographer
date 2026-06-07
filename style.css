@@ -1838,4 +1838,85 @@ footer {
   }
 }
 
+/* Promotional Video Section */
+.promo-video-section {
+  padding: 60px 0;
+  background-color: #0b0c0e;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
 
+.promo-video-wrapper {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #111215;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.promo-video-wrapper:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 15px 40px rgba(230, 57, 70, 0.15);
+}
+
+.promo-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background-color: #000;
+}
+
+.promo-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.promo-video-info {
+  padding: 20px 24px;
+  background-color: #111215;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.promo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.promo-title {
+  font-family: 'Outfit', 'Prompt', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-white);
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .promo-video-section {
+    padding: 40px 0;
+  }
+  .promo-video-info {
+    padding: 16px 20px;
+  }
+  .promo-title {
+    font-size: 15px;
+  }
+}
